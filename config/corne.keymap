@@ -49,10 +49,10 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&kp TAB    &trans  &kp N7        &kp N8        &kp NUMBER_9  &trans       &trans          &trans             &trans           &trans      &trans            &kp BSPC
-&kp LCTRL  &trans  &kp NUMBER_4  &kp N5        &kp NUMBER_6  &trans       &kp LEFT        &kp DOWN           &kp UP           &kp RIGHT   &trans            &trans
-&kp LSHFT  &kp N0  &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans       &kp C_PREVIOUS  &kp C_VOLUME_DOWN  &kp C_VOLUME_UP  &kp C_NEXT  &kp C_PLAY_PAUSE  &kp ESC
-                                 &kp LGUI      &trans        &kp ENTER    &kp SPACE       &trans             &kp RIGHT_GUI
+&kp TAB    &kp KP_MULTIPLY  &kp N7        &kp N8        &kp NUMBER_9  &kp MINUS     &trans          &trans             &trans           &trans      &trans            &kp BSPC
+&kp LCTRL  &kp KP_DIVIDE    &kp NUMBER_4  &kp N5        &kp NUMBER_6  &kp PLUS      &kp LEFT        &kp DOWN           &kp UP           &kp RIGHT   &kp COLON         &trans
+&kp LSHFT  &kp N0           &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp KP_DOT    &kp C_PREVIOUS  &kp C_VOLUME_DOWN  &kp C_VOLUME_UP  &kp C_NEXT  &kp C_PLAY_PAUSE  &kp ESC
+                                          &kp LGUI      &trans        &kp ENTER     &kp SPACE       &trans             &kp RIGHT_GUI
             >;
         };
 
@@ -64,10 +64,10 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&kp TAB    &kp EXCL         &kp AT       &kp HASH     &kp DLLR       &kp PRCNT      &kp CARET  &kp AMPS   &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp RPAR  &kp BSPC
-&kp LCTRL  &kp EXCLAMATION  &kp AT_SIGN  &kp HASH     &kp DOLLAR     &kp PERCENT    &kp MINUS  &kp EQUAL  &kp LBKT              &kp RBKT               &kp BSLH  &kp GRAVE
-&kp LSHFT  &trans           &kp HOME     &kp PAGE_UP  &kp PAGE_DOWN  &kp END        &kp UNDER  &kp PLUS   &kp LBRC              &kp RBRC               &kp PIPE  &kp TILDE
-                                         &kp LGUI     &trans         &kp ENTER      &kp SPACE  &trans     &kp RIGHT_GUI
+&kp TAB    &kp AMPS         &kp AT        &kp SLASH    &kp BACKSLASH  &kp CARET      &kp UNDER     &kp EQUAL             &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp RPAR               &kp BSPC
+&kp LCTRL  &kp EXCLAMATION  &kp QUESTION  &kp HASH     &kp DOLLAR     &kp PERCENT    &kp MINUS     &kp PLUS              &kp LBKT              &kp RBKT               &kp PIPE               &kp GRAVE
+&kp LSHFT  &trans           &kp HOME      &kp PAGE_UP  &kp PAGE_DOWN  &kp END        &kp ASTERISK  &kp LEFT_PARENTHESIS  &kp LBRC              &kp RBRC               &kp RIGHT_PARENTHESIS  &kp TILDE
+                                          &kp LGUI     &trans         &kp ENTER      &kp SPACE     &trans                &kp RIGHT_GUI
             >;
         };
     };
