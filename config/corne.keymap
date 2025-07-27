@@ -22,13 +22,6 @@
             require-prior-idle-ms = <250>;
             hold-trigger-key-positions = <16 15 14 13 19 20 21 22>;
         };
-
-        bt: bt {
-            compatible = "zmk,behavior-bluetooth";
-            label = "BT";
-        };
-
-
     };
 
     keymap {
