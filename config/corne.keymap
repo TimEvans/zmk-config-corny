@@ -12,7 +12,7 @@
     behaviors {
         hrm: hrm {
             compatible = "zmk,behavior-hold-tap";
-            label = "HRM";
+            label = "Home Row Mods";
             bindings = <&kp>, <&kp>;
 
             #binding-cells = <2>;
@@ -65,10 +65,10 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&kp TAB    &kp AMPS         &kp AT        &kp SLASH    &kp BACKSLASH  &kp CARET      &kp UNDER     &kp EQUAL             &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp RPAR               &kp BSPC
-&kp LCTRL  &kp EXCLAMATION  &kp QUESTION  &kp HASH     &kp DOLLAR     &kp PERCENT    &kp MINUS     &kp PLUS              &kp LBKT              &kp RBKT               &kp PIPE               &kp GRAVE
-&kp LSHFT  &trans           &kp HOME      &kp PAGE_UP  &kp PAGE_DOWN  &kp END        &kp ASTERISK  &kp LEFT_PARENTHESIS  &kp LBRC              &kp RBRC               &kp RIGHT_PARENTHESIS  &kp TILDE
-                                          &kp LGUI     &trans         &kp ENTER      &kp SPACE     &trans                &kp RIGHT_GUI
+&kp TAB    &kp AMPS         &kp AT        &kp SLASH    &kp BACKSLASH  &kp CARET      &kp UNDER     &kp EQUAL      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PIPE          &kp BSPC
+&kp LCTRL  &kp EXCLAMATION  &kp QUESTION  &kp HASH     &kp DOLLAR     &kp PERCENT    &kp MINUS     &kp PLUS       &kp LBKT              &kp RBKT               &kp COLON         &kp GRAVE
+&kp LSHFT  &trans           &kp HOME      &kp PAGE_UP  &kp PAGE_DOWN  &kp END        &kp ASTERISK  &kp LESS_THAN  &kp LBRC              &kp RBRC               &kp GREATER_THAN  &kp TILDE
+                                          &kp LGUI     &trans         &kp ENTER      &kp SPACE     &trans         &kp RIGHT_GUI
             >;
         };
     };
