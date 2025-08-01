@@ -7,7 +7,7 @@ jobs:
   commit-firmware:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
