@@ -15,22 +15,68 @@ show_usage() {
     exit 1
 }
 
-find_nicenano_devices() {
+find_and_mount_nicenano_devices() {
     local devices=()
     
-    # Check common mount points
-    for mount_point in "/run/media/$USER/NICENANO" "/media/$USER/NICENANO" "/mnt/NICENANO"; do
+    # First, check already mounted devices with common names
+    for mount_point in "/run/media/$USER/NICENANO" "/media/$USER/NICENANO" "/mnt/NICENANO" \
+                       "/run/media/$USER/RPI-RP2" "/media/$USER/RPI-RP2" "/mnt/RPI-RP2"; do
         if [[ -d "$mount_point" ]]; then
             devices+=("$mount_point")
         fi
     done
     
-    # Search for NICENANO in all mount points
+    # Search for NICENANO or RPI-RP2 in all mount points
     while IFS= read -r -d '' device; do
-        if [[ "$device" == *"NICENANO"* ]]; then
+        if [[ "$device" == *"NICENANO"* || "$device" == *"RPI-RP2"* ]]; then
             devices+=("$device")
         fi
-    done < <(find /run/media /media /mnt 2>/dev/null -maxdepth 3 -name "*NICENANO*" -type d -print0 2>/dev/null || true)
+    done < <(find /run/media /media /mnt 2>/dev/null -maxdepth 3 \( -name "*NICENANO*" -o -name "*RPI-RP2*" \) -type d -print0 2>/dev/null || true)
+    
+    # Check for unmounted NICENANO devices and try to mount them
+    while IFS= read -r line; do
+        local device_name label mount_point device_path
+        device_name=$(echo "$line" | awk '{print $1}')
+        label=$(echo "$line" | awk '{print $2}')
+        mount_point=$(echo "$line" | awk '{print $3}')
+        
+        # Ensure device path starts with /dev/
+        if [[ "$device_name" == /dev/* ]]; then
+            device_path="$device_name"
+        else
+            device_path="/dev/$device_name"
+        fi
+        
+        if [[ "$label" == "NICENANO" || "$label" == "RPI-RP2" ]] && [[ -z "$mount_point" || "$mount_point" == "" ]]; then
+            echo "Found unmounted NICENANO device: $device_path" >&2
+            
+            # Try to mount using udisksctl (preferred method)
+            if command -v udisksctl >/dev/null 2>&1; then
+                echo "Mounting $device_path using udisksctl..." >&2
+                if mount_output=$(udisksctl mount -b "$device_path" 2>&1); then
+                    # Extract mount point from udisksctl output (format: "Mounted /dev/xxx at /path/to/mount")
+                    new_mount_point=$(echo "$mount_output" | sed -n 's/.*at \(\/.*\)\.*/\1/p')
+                    if [[ -n "$new_mount_point" && -d "$new_mount_point" ]]; then
+                        echo "Successfully mounted at: $new_mount_point" >&2
+                        devices+=("$new_mount_point")
+                    fi
+                else
+                    echo "Failed to mount with udisksctl: $mount_output" >&2
+                fi
+            else
+                # Fallback to manual mount
+                local fallback_mount="/run/media/$USER/NICENANO"
+                echo "udisksctl not available, trying manual mount to $fallback_mount..." >&2
+                
+                if sudo mkdir -p "$fallback_mount" && sudo mount "$device_path" "$fallback_mount"; then
+                    echo "Successfully mounted at: $fallback_mount" >&2
+                    devices+=("$fallback_mount")
+                else
+                    echo "Failed to manually mount $device_path" >&2
+                fi
+            fi
+        fi
+    done < <(lsblk -nr -o NAME,LABEL,MOUNTPOINT | grep -E "(NICENANO|RPI-RP2)" || true)
     
     # Remove duplicates
     printf '%s\n' "${devices[@]}" | sort -u
@@ -38,7 +84,7 @@ find_nicenano_devices() {
 
 select_device() {
     local devices
-    mapfile -t devices < <(find_nicenano_devices)
+    mapfile -t devices < <(find_and_mount_nicenano_devices)
     
     if [[ ${#devices[@]} -eq 0 ]]; then
         echo "No NICENANO devices found." >&2
