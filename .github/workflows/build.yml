@@ -27,13 +27,11 @@ jobs:
     - name: Create firmware-builds directory
       run: mkdir -p firmware-builds
     
-    # Extract firmware files from the zip
-    - name: Extract firmware files
+    # Move firmware files to firmware-builds folder
+    - name: Move firmware files
       run: |
-        unzip firmware.zip -d temp-extract/
-        mv temp-extract/corne_left-nice_nano_v2-zmk.uf2 firmware-builds/
-        mv temp-extract/corne_right-nice_nano_v2-zmk.uf2 firmware-builds/
-        rm -rf temp-extract/
+        mv corne_left-nice_nano_v2-zmk.uf2 firmware-builds/
+        mv corne_right-nice_nano_v2-zmk.uf2 firmware-builds/
     
     # Commit the firmware files
     - name: Commit firmware files
