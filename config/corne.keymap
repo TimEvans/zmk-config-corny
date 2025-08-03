@@ -55,9 +55,9 @@
 
         layer_3 {
             bindings = <
-&bt BT_CLR    &sys_reset    &bootloader   &trans        &trans        &trans    &trans  &trans      &trans      &trans  &trans  &ext_power EP_OFF
-&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &trans    &trans  &bt BT_PRV  &bt BT_NXT  &trans  &trans  &ext_power EP_ON
-&trans        &trans        &trans        &trans        &trans        &trans    &trans  &trans      &trans      &trans  &trans  &ext_power EP_TOG
+&bt BT_CLR    &sys_reset    &bootloader   &trans        &trans        &trans    &trans  &trans      &trans      &trans  &trans  &ext_power &trans
+&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &trans    &trans  &bt BT_PRV  &bt BT_NXT  &trans  &trans  &ext_power &trans
+&trans        &trans        &trans        &trans        &trans        &trans    &trans  &trans      &trans      &trans  &trans  &ext_power &trans
                                           &trans        &trans        &trans    &trans  &trans      &trans
             >;
         };
