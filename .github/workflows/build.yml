@@ -24,12 +24,22 @@ jobs:
       - name: Move firmware files
         run: |
           mkdir -p firmware-builds
+          echo "=== Downloaded artifact structure ==="
+          find firmware -type f -ls
           echo "=== Available firmware files ==="
           find firmware -name "*.uf2" -ls
-          echo "=== Copying firmware files ==="
-          find firmware -name "*.uf2" -exec cp -v {} firmware-builds/ \;
+          echo "=== Copying firmware files individually ==="
+          # Copy files one by one to avoid any overwrite issues
+          for file in $(find firmware -name "*.uf2"); do
+            echo "Copying: $file -> firmware-builds/$(basename $file)"
+            cp -v "$file" "firmware-builds/$(basename $file)"
+          done
           echo "=== Final firmware-builds directory ==="
           ls -la firmware-builds/
+          echo "=== File sizes and hashes ==="
+          for file in firmware-builds/*.uf2; do
+            echo "$file: $(wc -c < "$file") bytes, md5: $(md5sum "$file" | cut -d' ' -f1)"
+          done
           
       - name: Commit firmware
         run: |
