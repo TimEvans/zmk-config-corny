@@ -24,13 +24,25 @@ jobs:
       - name: Move firmware files
         run: |
           mkdir -p firmware-builds
-          find firmware -name "*.uf2" -exec cp {} firmware-builds/ \;
+          echo "=== Available firmware files ==="
+          find firmware -name "*.uf2" -ls
+          echo "=== Copying firmware files ==="
+          find firmware -name "*.uf2" -exec cp -v {} firmware-builds/ \;
+          echo "=== Final firmware-builds directory ==="
+          ls -la firmware-builds/
           
       - name: Commit firmware
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          echo "=== Git status before staging ==="
+          git status
+          echo "=== Adding firmware-builds/ ==="
           git add firmware-builds/
+          echo "=== Git status after staging ==="
+          git status
+          echo "=== Staged changes ==="
+          git diff --staged --stat
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
