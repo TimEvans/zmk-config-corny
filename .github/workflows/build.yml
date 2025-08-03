@@ -1,34 +1,43 @@
 name: Build ZMK firmware
 on: [push, pull_request, workflow_dispatch]
-
 permissions:
   contents: write
-
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.2
   
   commit-firmware:
-    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
-    permissions:
-      contents: write
+    needs: build
+    if: github.event_name != 'pull_request'  # Only commit on push/workflow_dispatch, not PRs
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Download firmware artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: firmware
-          path: firmware-builds/
-          
-      # Commit the firmware files
-      - name: Commit firmware files
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'Auto-update firmware builds'
-          file_pattern: 'firmware-builds/*.uf2'
+    - uses: actions/checkout@v4
+    
+    # Download the firmware artifact created by the build job
+    - name: Download firmware artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: firmware
+    
+    # Debug: List what was downloaded
+    - name: List downloaded files
+      run: ls -la
+    
+    # Create firmware-builds directory if it doesn't exist
+    - name: Create firmware-builds directory
+      run: mkdir -p firmware-builds
+    
+    # Extract firmware files from the zip
+    - name: Extract firmware files
+      run: |
+        unzip firmware.zip -d temp-extract/
+        mv temp-extract/corne_left-nice_nano_v2-zmk.uf2 firmware-builds/
+        mv temp-extract/corne_right-nice_nano_v2-zmk.uf2 firmware-builds/
+        rm -rf temp-extract/
+    
+    # Commit the firmware files
+    - name: Commit firmware files
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'Auto-update firmware builds'
+        file_pattern: 'firmware-builds/corne_left-nice_nano_v2-zmk.uf2 firmware-builds/corne_right-nice_nano_v2-zmk.uf2'
