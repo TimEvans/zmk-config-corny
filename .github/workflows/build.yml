@@ -23,12 +23,11 @@ jobs:
       - name: Create firmware directory
         run: |
           mkdir -p firmware-builds
-          mv corne_left-nice_nano_v2-zmk.uf2 firmware-builds/
-          mv corne_right-nice_nano_v2-zmk.uf2 firmware-builds/
+          mv firmware.zip firmware-builds/
           
       # Commit the firmware files
       - name: Commit firmware files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Auto-update firmware builds'
-          file_pattern: 'firmware-builds/corne_left-nice_nano_v2-zmk.uf2 firmware-builds/corne_right-nice_nano_v2-zmk.uf2'
+          file_pattern: 'firmware-builds/firmware.zip'
