@@ -6,7 +6,6 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/keys.h>
 
 / {
@@ -55,10 +54,10 @@
 
         layer_3 {
             bindings = <
-&bt BT_CLR    &sys_reset    &bootloader   &trans        &trans        &trans    &trans  &trans      &trans      &trans  &trans  &ext_power &trans
-&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &trans    &trans  &bt BT_PRV  &bt BT_NXT  &trans  &trans  &ext_power &trans
-&trans        &trans        &trans        &trans        &trans        &trans    &trans  &trans      &trans      &trans  &trans  &ext_power &trans
-                                          &trans        &trans        &trans    &trans  &trans      &trans
+&bt BT_CLR  &sys_reset    &bootloader   &trans        &trans        &trans          &trans  &trans  &trans      &trans      &trans  &trans
+&trans      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &trans  &trans  &bt BT_PRV  &bt BT_NXT  &trans  &trans
+&trans      &trans        &trans        &trans        &trans        &trans          &trans  &trans  &trans      &trans      &trans  &trans
+                                        &trans        &trans        &trans          &trans  &trans  &trans
             >;
         };
     };
