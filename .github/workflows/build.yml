@@ -1,5 +1,9 @@
 name: Build ZMK firmware
 on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: write
+
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.2
@@ -15,47 +19,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Download firmware artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: firmware
           
-      - name: Move firmware files
+      - name: Create firmware directory
         run: |
           mkdir -p firmware-builds
-          echo "=== Downloaded artifact structure ==="
-          find firmware -type f -ls
-          echo "=== Available firmware files ==="
-          find firmware -name "*.uf2" -ls
-          echo "=== Copying firmware files individually ==="
-          # Copy files one by one to avoid any overwrite issues
-          for file in $(find firmware -name "*.uf2"); do
-            echo "Copying: $file -> firmware-builds/$(basename $file)"
-            cp -v "$file" "firmware-builds/$(basename $file)"
-          done
-          echo "=== Final firmware-builds directory ==="
-          ls -la firmware-builds/
-          echo "=== File sizes and hashes ==="
-          for file in firmware-builds/*.uf2; do
-            echo "$file: $(wc -c < "$file") bytes, md5: $(md5sum "$file" | cut -d' ' -f1)"
-          done
+          mv corne_left-nice_nano_v2-zmk.uf2 firmware-builds/
+          mv corne_right-nice_nano_v2-zmk.uf2 firmware-builds/
           
-      - name: Commit firmware
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          echo "=== Git status before staging ==="
-          git status
-          echo "=== Adding firmware-builds/ ==="
-          git add firmware-builds/
-          echo "=== Git status after staging ==="
-          git status
-          echo "=== Staged changes ==="
-          git diff --staged --stat
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Auto-update firmware builds [skip ci]"
-            git push
-          fi
+      # Commit the firmware files
+      - name: Commit firmware files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Auto-update firmware builds'
+          file_pattern: 'firmware-builds/corne_left-nice_nano_v2-zmk.uf2 firmware-builds/corne_right-nice_nano_v2-zmk.uf2'
