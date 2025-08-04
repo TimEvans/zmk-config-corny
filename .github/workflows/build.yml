@@ -13,11 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    # Download the firmware artifact created by the build job
+    # Download the firmware artifact created by the build job from this specific workflow run
     - name: Download firmware artifact
       uses: actions/download-artifact@v4
       with:
         name: firmware
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        repository: ${{ github.repository }}
+        run-id: ${{ github.run_id }}
     
     # Debug: List what was downloaded
     - name: List downloaded files
