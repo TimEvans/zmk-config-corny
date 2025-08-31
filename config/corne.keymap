@@ -41,10 +41,10 @@
 
         default_layer {
             bindings = <
-&kp TAB    &kp Q  &kp W             &kp E              &kp R            &kp T        &kp Y      &kp U             &kp I               &kp O              &kp P     &kp BSPC
-&kp LCTRL  &kp A  &hrm LEFT_META S  &hrm LEFT_SHIFT D  &hrm LCTRL F     &kp G        &kp H      &hrm RCTRL J      &hrm RIGHT_SHIFT K  &hrm RIGHT_META L  &kp SEMI  &kp SQT
-&kp LSHFT  &kp Z  &kp X             &kp C              &hrm LEFT_ALT V  &kp B        &kp N      &hrm RIGHT_ALT M  &kp COMMA           &kp DOT            &kp FSLH  &kp ESC
-                                    &kp LEFT_ALT       &mo 2            &kp ENTER    &kp SPACE  &mo 1             &kp RIGHT_GUI
+&kp TAB    &kp Q  &kp W             &kp E               &kp R            &kp T        &kp Y      &kp U             &kp I               &kp O              &kp P     &kp BSPC
+&kp LCTRL  &kp A  &hrm LEFT_META S  &hrm LEFT_SHIFT D   &hrm LCTRL F     &kp G        &kp H      &hrm RCTRL J      &hrm RIGHT_SHIFT K  &hrm RIGHT_META L  &kp SEMI  &kp SQT
+&kp LSHFT  &kp Z  &kp X             &kp C               &hrm LEFT_ALT V  &kp B        &kp N      &hrm RIGHT_ALT M  &kp COMMA           &kp DOT            &kp FSLH  &kp ESC
+                                    &kp LALT            &mo 2            &kp ENTER    &kp SPACE  &mo 1             &kp RIGHT_GUI
             >;
         };
 
@@ -59,10 +59,10 @@
 
         raise_layer {
             bindings = <
-&kp TAB    &kp KP_MULTIPLY  &kp N7        &kp N8        &kp NUMBER_9  &kp MINUS     &kp UNDER     &kp EQUAL      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PIPE          &kp BSPC
-&kp LCTRL  &kp KP_DIVIDE    &kp NUMBER_4  &kp N5        &kp NUMBER_6  &kp PLUS      &kp MINUS     &kp PLUS       &kp LBKT              &kp RBKT               &kp COLON         &kp DEL
-&kp LSHFT  &kp N0           &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp KP_DOT    &kp ASTERISK  &kp LESS_THAN  &kp LBRC              &kp RBRC               &kp GREATER_THAN  &kp TILDE
-                                          &kp LEFT_ALT  &mo 3         &kp ENTER     &kp SPACE     &mo 3          &kp RIGHT_GUI
+&kp TAB    &kp KP_MULTIPLY  &kp N7  &kp N8        &kp N9  &kp MINUS &kp UNDER     &kp EQUAL      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PIPE          &kp BSPC
+&kp LCTRL  &kp KP_DIVIDE    &kp N4  &kp N5        &kp N6  &kp PLUS  &kp MINUS     &kp PLUS       &kp LBKT              &kp RBKT               &kp COLON         &kp DEL
+&kp LSHFT  &kp N0           &kp N1  &kp N2        &kp N3  &kp DOT   &kp ASTERISK  &kp LESS_THAN  &kp LBRC              &kp RBRC               &kp GREATER_THAN  &kp TILDE
+                                    &kp LALT      &mo 3   &kp ENTER &kp SPACE     &mo 3          &kp RIGHT_GUI
             >;
         };
 
