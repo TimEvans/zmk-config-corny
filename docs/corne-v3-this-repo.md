@@ -106,14 +106,41 @@ Current base-layer mod assignments (`&hrm <mod> <tap>`):
 
 ```ini
 CONFIG_ZMK_SLEEP=y                    # enable deep sleep (off by default)
-CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000 # 30 min of inactivity -> deep sleep
+CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=600000  # 10 min of inactivity -> deep sleep
 ```
 
-Defaults left in place: idle (lower BLE poll rate) after 30s
-(`CONFIG_ZMK_IDLE_TIMEOUT=30000`), and battery reporting is on for
-`nice_nano_v2`. Tradeoff: after deep sleep there's a brief (~1s) wake-on-keypress
-delay, and each half sleeps independently. See the power section in
-[zmk-reference.md](./zmk-reference.md).
+Two separate timers:
+
+- **Idle: 30s** (`CONFIG_ZMK_IDLE_TIMEOUT`, default). Lowers the BLE poll rate
+  and, with the OLED on, blanks the screen (`CONFIG_ZMK_DISPLAY_BLANK_ON_IDLE`
+  defaults `y` for SSD1306). Tap any key to wake it.
+- **Deep sleep: 10 min** (set above). Powers the board down to ~µA and drops
+  BLE; wake takes ~1s and reconnects. Each half sleeps independently.
+
+Battery reporting is on by default for `nice_nano_v2`.
+
+## OLED displays
+
+`CONFIG_ZMK_DISPLAY=y` turns on the two SSD1306 OLEDs. The Corne shield's
+`Kconfig.defconfig` auto-enables `I2C`, `SSD1306`, and the LVGL settings, so the
+single line is all `config/corne.conf` needs.
+
+- **Left (central)** OLED shows the default status screen: battery %, active
+  layer, and BLE/output status.
+- **Right (peripheral)** OLED shows a connection/status screen.
+
+To see **both** halves' batteries, the config also sets:
+
+```ini
+CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y  # central reads peripheral level
+CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY=y     # report it to the host too
+```
+
+The host's Bluetooth UI will then show two batteries. Note: the *left* OLED's
+battery widget shows only the left half's level — putting the right half's
+battery on-screen would need a custom LVGL widget (not done here).
+
+See the power section in [zmk-reference.md](./zmk-reference.md).
 
 ## Local toolchain setup (one-time)
 
