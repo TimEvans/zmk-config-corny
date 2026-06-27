@@ -25,26 +25,33 @@ itself in as a west dependency.
   `layer_3`). Devicetree syntax.
 - `config/corne.conf` — Kconfig feature toggles (currently just `CONFIG_BT=y`).
   Shared across both halves.
-- `config/west.yml` — west manifest; pins ZMK to revision **v0.2**.
-- `build.yaml` — GitHub Actions build matrix (`corne_left` + `corne_right` on
-  `nice_nano_v2`).
-- `.github/workflows/build.yml` — builds firmware on push, then **auto-commits**
-  the `.uf2` artifacts into `firmware-builds/`.
-- `firmware-builds/*.uf2` — committed build outputs, consumed by `flash.sh`.
-- `flash.sh` — local flashing helper.
+- `config/west.yml` — west manifest; pins ZMK to revision **v0.3** (Zephyr
+  `v3.5.0+zmk-fixes`, so the local toolchain needs **Zephyr SDK 0.16.x**).
+- `build.sh` — local build helper (`west build` for each half; also a
+  `settings_reset` target). Outputs `.uf2` into `firmware-builds/`.
+- `flash.sh` — local flashing helper (copies a `.uf2` to the NICENANO drive).
+- `firmware-builds/*.uf2` — build outputs consumed by `flash.sh`.
+
+Builds are **local only** — there is no CI. The previous GitHub Actions workflow
+and `build.yaml` matrix were removed; recover them from git history if ever
+needed.
 
 ## Common tasks
 
 - **Change the keymap:** edit `config/corne.keymap`. Keep each main row at 12
   bindings (6 per side) and the thumb row at 6, or the build fails. All changes
   are compile-time — a rebuild + reflash is required for anything to take effect.
-- **Build firmware:** `git push`. CI builds both halves and commits the updated
-  `.uf2` files back to `firmware-builds/` (commit `Auto-update firmware builds`).
-  There is no local build step in this repo; building happens in GitHub Actions.
+- **Build firmware:** `./build.sh` (both halves) or `./build.sh left|right`.
+  Requires the one-time local toolchain setup — see
+  [docs/corne-v3-this-repo.md](docs/corne-v3-this-repo.md). Outputs `.uf2` into
+  `firmware-builds/`.
 - **Flash firmware:** `./flash.sh left` and `./flash.sh right`. Put each half in
   bootloader mode first (double-tap reset, or the `&bootloader` key on layer 3);
   it mounts as a `NICENANO` drive and the script copies the matching `.uf2`.
   Flash **both** halves after a keymap change.
+- **Halves won't talk over BLE (e.g. after swapping a controller):** build
+  `./build.sh reset`, flash that `settings_reset` UF2 to **both** halves, then
+  build + flash real firmware again, and re-pair the host. See the repo doc.
 
 ## Conventions
 
@@ -52,5 +59,6 @@ itself in as a west dependency.
   matches file order in the keymap.
 - Key positions for `hold-trigger-key-positions` / future combos are 0-indexed
   left-to-right, top-to-bottom — see the position map in the repo-specific doc.
-- The `firmware-builds/` `.uf2` files are CI-generated; don't hand-edit them.
-  Commits there are made automatically by the build workflow.
+- The `firmware-builds/` `.uf2` files are produced by `build.sh`. The local west
+  workspace (`zmk/`, `zephyr/`, `modules/`, `.west/`, `build/`, `.venv/`) is
+  gitignored — don't commit it.

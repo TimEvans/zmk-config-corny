@@ -1,0 +1,17 @@
+# Local west workspace (created by `west init -l config && west update`)
+/.west/
+/zmk/
+/zephyr/
+/modules/
+/tools/
+
+# Build output and Python venv
+/build/
+/.venv/
+__pycache__/
+
+# Local tooling
+/.timekeeper/
+
+# Transient reset artifact (regenerate with ./build.sh reset)
+/firmware-builds/settings_reset-*.uf2

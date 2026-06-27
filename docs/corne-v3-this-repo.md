@@ -7,9 +7,12 @@ Repo-specific notes. For ZMK syntax/behavior details, see
 
 - **Keyboard:** Corne v3 (CRKBD), 42 keys — 6 columns x 3 rows + 3 thumb keys
   per half, column-staggered split.
-- **Controllers:** two `nice_nano_v2` (one per half), connected over BLE.
-- **Shields:** `corne_left`, `corne_right` (see `build.yaml`).
+- **Controllers:** two `nice_nano_v2` (or a SuperMini nRF52840 clone) — one per
+  half, connected over BLE.
+- **Shields:** `corne_left`, `corne_right`.
 - **Connectivity:** Bluetooth (`CONFIG_BT=y` in `config/corne.conf`).
+- **ZMK version:** pinned to `v0.3` in `config/west.yml` (Zephyr
+  `v3.5.0+zmk-fixes`).
 
 > Note: this is the full 6-column Corne. Some Corne builds drop the outer
 > column for a 36-key layout — this config uses all 42 keys, so every row in the
@@ -97,28 +100,104 @@ Current base-layer mod assignments (`&hrm <mod> <tap>`):
   (12 per main row, 6 thumbs) or the build fails.
 - Changes are compile-time: every edit needs a rebuild + reflash.
 
-## Build & flash
+## Power management
 
-**Build (GitHub Actions):** pushing to the repo triggers
-`.github/workflows/build.yml`, which builds via ZMK's reusable
-`build-user-config.yml` and then auto-commits the resulting `.uf2` files back
-into `firmware-builds/` (commit message `Auto-update firmware builds`). The
-matrix is defined in `build.yaml` (`corne_left` + `corne_right` on
-`nice_nano_v2`).
+`config/corne.conf` enables deep sleep for wireless battery life:
 
-**Flash (local):** use the helper script — see
-[../flash.sh](../flash.sh):
-
-```bash
-./flash.sh left      # flash the left half
-./flash.sh right     # flash the right half
+```ini
+CONFIG_ZMK_SLEEP=y                    # enable deep sleep (off by default)
+CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000 # 30 min of inactivity -> deep sleep
 ```
 
-To flash, put a half into bootloader mode (double-tap its reset button, or use
-the `&bootloader` key on layer 3). It mounts as a `NICENANO` USB drive; the
-script finds/mounts it and copies
+Defaults left in place: idle (lower BLE poll rate) after 30s
+(`CONFIG_ZMK_IDLE_TIMEOUT=30000`), and battery reporting is on for
+`nice_nano_v2`. Tradeoff: after deep sleep there's a brief (~1s) wake-on-keypress
+delay, and each half sleeps independently. See the power section in
+[zmk-reference.md](./zmk-reference.md).
+
+## Local toolchain setup (one-time)
+
+Builds are done **locally** with the native west toolchain (no CI), using `uv`
+to manage the Python environment. ZMK `v0.3` uses Zephyr `3.5.0`, so you need
+**Zephyr SDK 0.16.x** (not 0.17+). On Arch, Zephyr 3.5 is incompatible with
+CMake 4 (the system `cmake`), so we pin `cmake<4` inside the uv venv.
+
+```bash
+# 1. Host packages (uv provides Python; CMake is pinned in the venv below)
+sudo pacman -S --needed git ninja gperf dtc base-devel
+
+# 2. uv venv with west + a CMake 3.x
+uv venv                       # if not already created
+source .venv/bin/activate
+uv pip install west "cmake<4"
+
+# 3. Fetch ZMK + Zephyr into the (gitignored) local workspace
+west init -l config
+west update
+west zephyr-export
+uv pip install -r zephyr/scripts/requirements.txt
+
+# 4. Zephyr SDK 0.16.x (ARM target only is enough for nice_nano_v2)
+#    Download from:
+#    https://github.com/zephyrproject-rtos/sdk-ng/releases (pick a 0.16.x tag)
+#    Extract, then run its ./setup.sh and register it, e.g.:
+#      cd ~/zephyr-sdk-0.16.8 && ./setup.sh -t arm-zephyr-eabi -c
+```
+
+`west init -l config` makes this repo the manifest and clones `zmk/`, `zephyr/`,
+and `modules/` into the repo root — all gitignored. (Purist alternative: nest
+this repo inside a dedicated workspace dir instead; not required.)
+
+After setup, activate the venv (`source .venv/bin/activate`) in any shell before
+building.
+
+## Build & flash
+
+**Build** with [../build.sh](../build.sh) (outputs to `firmware-builds/`):
+
+```bash
+./build.sh            # both halves
+./build.sh left       # just the left half
+./build.sh right      # just the right half
+./build.sh reset      # settings_reset firmware (see below)
+```
+
+**Flash** with [../flash.sh](../flash.sh):
+
+```bash
+./flash.sh left       # flash the left half
+./flash.sh right      # flash the right half
+```
+
+Put a half into bootloader mode (double-tap its reset button, or the
+`&bootloader` key on layer 3). It mounts as a `NICENANO` USB drive; the script
+finds/mounts it and copies
 `firmware-builds/corne_<side>-nice_nano_v2-zmk.uf2` onto it. The board
-auto-reboots when done. Flash both halves after a keymap change.
+auto-reboots. Flash **both** halves after a keymap change.
+
+## Fixing split halves that won't talk over BLE
+
+The two halves keep a bond with each other that is separate from host BLE
+profiles. Replacing or reflashing a controller breaks it, and `&bt BT_CLR` does
+**not** fix it (that only clears host profiles). Symptom: works wired, but the
+peripheral (right) half is dead over Bluetooth.
+
+Fix — reset stored settings on **both** halves, in order:
+
+```bash
+./build.sh reset      # builds firmware-builds/settings_reset-nice_nano_v2-zmk.uf2
+```
+
+1. Bootloader the left half; copy `settings_reset-...uf2` onto its NICENANO drive.
+2. Bootloader the right half; copy the same `settings_reset-...uf2` onto it.
+3. `./build.sh` then `./flash.sh left` and `./flash.sh right` to restore real
+   firmware on both.
+4. Reset both halves at about the same time, then forget + re-pair the keyboard
+   on the host.
+
+`settings_reset` has Bluetooth disabled on purpose so the halves don't re-bond to
+stale data before both are wiped. This erases all stored settings (BT profiles,
+output selection, etc.).
 
 ## Visual editor
 

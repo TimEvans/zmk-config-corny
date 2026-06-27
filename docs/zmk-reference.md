@@ -1,7 +1,7 @@
 # ZMK Reference
 
 Condensed reference for the ZMK concepts used in this config, compiled from
-[zmk.dev/docs](https://zmk.dev/docs). This repo tracks ZMK **v0.2** (see
+[zmk.dev/docs](https://zmk.dev/docs). This repo tracks ZMK **v0.3** (see
 `config/west.yml`). Syntax below is stable across recent versions, but always
 cross-check the live docs for anything new.
 
