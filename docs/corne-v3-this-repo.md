@@ -105,8 +105,10 @@ Current base-layer mod assignments (`&hrm <mod> <tap>`):
 `config/corne.conf` enables deep sleep for wireless battery life:
 
 ```ini
-CONFIG_ZMK_SLEEP=y                    # enable deep sleep (off by default)
-CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=600000  # 10 min of inactivity -> deep sleep
+CONFIG_ZMK_SLEEP=y                     # enable deep sleep (off by default)
+CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000  # 30 min of inactivity -> deep sleep
+CONFIG_ZMK_BLE_EXPERIMENTAL_CONN=y     # connection-stability tweaks for
+                                       # reliable reconnect after sleep
 ```
 
 Two separate timers:
@@ -114,8 +116,11 @@ Two separate timers:
 - **Idle: 30s** (`CONFIG_ZMK_IDLE_TIMEOUT`, default). Lowers the BLE poll rate
   and, with the OLED on, blanks the screen (`CONFIG_ZMK_DISPLAY_BLANK_ON_IDLE`
   defaults `y` for SSD1306). Tap any key to wake it.
-- **Deep sleep: 10 min** (set above). Powers the board down to ~µA and drops
-  BLE; wake takes ~1s and reconnects. Each half sleeps independently.
+- **Deep sleep: 30 min** (set above). Powers the board down to ~µA and drops
+  BLE; wake takes ~1s and reconnects. Each half sleeps independently, and a
+  keypress only wakes the half it lands on — the left (central) half must be
+  woken for the host connection to come back, and the wake keypress itself is
+  not sent.
 
 Battery reporting is on by default for `nice_nano_v2`.
 
