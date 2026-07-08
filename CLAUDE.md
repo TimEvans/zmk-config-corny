@@ -44,7 +44,8 @@ needed.
 - **Build firmware:** `./build.sh` (both halves) or `./build.sh left|right`.
   Requires the one-time local toolchain setup — see
   [docs/corne-v3-this-repo.md](docs/corne-v3-this-repo.md). Outputs `.uf2` into
-  `firmware-builds/`.
+  `firmware-builds/`. **Activate the venv first** (`source .venv/bin/activate`)
+  in the same shell, or `build.sh` fails with `'west' is not on PATH`.
 - **Flash firmware:** `./flash.sh left` and `./flash.sh right`. Put each half in
   bootloader mode first (double-tap reset, or the `&bootloader` key on layer 3);
   it mounts as a `NICENANO` drive and the script copies the matching `.uf2`.
@@ -62,3 +63,8 @@ needed.
 - The `firmware-builds/` `.uf2` files are produced by `build.sh`. The local west
   workspace (`zmk/`, `zephyr/`, `modules/`, `.west/`, `build/`, `.venv/`) is
   gitignored — don't commit it.
+- **Always push after committing.** The online keymap editor pushes bot commits
+  directly to `origin/master`, so local and remote drift easily. `git fetch`
+  before starting work, and `git push origin master` after every commit so the
+  two never diverge. If they have (as in the July 2026 merge), integrate rather
+  than force — the editor's commits are real edits.
