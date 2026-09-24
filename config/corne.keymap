@@ -73,14 +73,17 @@
         // Toggled on/off with &tog 3 (Y key on the fn layer). Left hand is the
         // default layout with Space on the inner thumb and the game numpad on
         // the middle thumb. Right hand is spelled out as plain keys so that it
-        // does not fall through to the home-row mods on the base layer.
+        // does not fall through to the home-row mods on the base layer. Enter
+        // and Space swap sides. The right middle thumb is transparent, which
+        // reaches &mo 1 on the base layer, but the lower layer (index 1) is
+        // masked by this layer (index 3) so that key does nothing while gaming.
         gaming_layer {
             display-name = "Game";
             bindings = <
 &kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y      &kp U      &kp I      &kp O    &kp P     &kp BSPC
 &kp LCTRL  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H      &kp J      &kp K      &kp L    &kp SEMI  &kp SQT
 &kp LSHFT  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N      &kp M      &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                         &kp LALT  &mo 4  &kp SPACE    &kp SPACE  &kp ENTER  &kp RIGHT_GUI
+                         &kp LALT  &mo 4  &kp SPACE    &kp ENTER  &trans     &kp RIGHT_GUI
             >;
         };
 

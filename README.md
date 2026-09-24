@@ -62,13 +62,15 @@ Toggled on and off with `TG3` on the Fn layer (`Y` position). It stays on until
 toggled off again, so the momentary layers below can be held and released on top
 of it without leaving gaming mode. Left hand is the default layout with Space on
 the inner thumb and the game numpad (`L4`) on the middle thumb; the right hand
-is plain keys (no home-row mods) with Enter on the middle thumb for chat.
+is plain keys (no home-row mods) with Enter and Space swapped. The right middle
+thumb falls through to `L1`, but Lower (index 1) is masked by Game (index 3), so
+it does nothing while gaming.
 
 ```
  Tab    Q     W     E     R     T   │   Y     U     I     O     P    Bksp
  Ctrl   A     S     D     F     G   │   H     J     K     L     ;     '  
  Shft   Z     X     C     V     B   │   N     M     ,     .     /    Esc 
-                   Alt    L4   Spc  │  Spc   Ent   GUI 
+                   Alt    L4   Spc  │  Ent    ▽    GUI 
 ```
 
 Enter gaming from Base: right thumb (`L1`), left middle thumb (`L5`), `Y`.
