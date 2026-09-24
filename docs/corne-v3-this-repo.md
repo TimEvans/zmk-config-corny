@@ -73,14 +73,12 @@ hold-trigger-key-positions = <16 15 14 13 19 20 21 22>;
 Those positions are the eight home-row alpha keys: `13 14 15 16` = `A S D F`
 (left) and `19 20 21 22` = `J K L ;` (right).
 
-Current base-layer mod assignments (`&hrm <mod> <tap>`):
+Current base-layer mod assignments (`&hrm <mod> <tap>`). Only the **right**
+hand has home-row mods; the left hand (`S D F V`) is plain `&kp` so that
+`WASD`-style gaming never turns a held movement key into a modifier:
 
 | Pos | Key | Mod (hold) |
 | --- | --- | ---------- |
-| 14  | S   | Left GUI/Meta |
-| 15  | D   | Left Shift |
-| 16  | F   | Left Ctrl |
-| 28  | V   | Left Alt |
 | 19  | J   | Right Ctrl |
 | 20  | K   | Right Shift |
 | 21  | L   | Right Meta |

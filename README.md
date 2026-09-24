@@ -21,15 +21,17 @@ Four layers, referenced by index. `L1`/`L2`/`L3` are momentary layer holds
                    Alt    L2   Ent  │  Spc    L1   GUI 
 ```
 
-**Home-row mods** — held, these keys act as modifiers; tapped, they type the
-letter (hold-tap, 250 ms term):
+**Home-row mods** (right hand only) — held, these keys act as modifiers;
+tapped, they type the letter (hold-tap, 250 ms term). The left hand has no
+home-row mods so `WASD` and the surrounding keys behave as plain keys for
+gaming:
 
-| Finger | Left | Right | Modifier |
-|--------|------|-------|----------|
-| index  | `F`  | `J`   | Ctrl     |
-| middle | `D`  | `K`   | Shift    |
-| ring   | `S`  | `L`   | GUI      |
-| (lower)| `V`  | `M`   | Alt      |
+| Finger | Right | Modifier |
+|--------|-------|----------|
+| index  | `J`   | Ctrl     |
+| middle | `K`   | Shift    |
+| ring   | `L`   | GUI      |
+| (lower)| `M`   | Alt      |
 
 ### Layer 1 — Lower (symbols, navigation, media)
 
