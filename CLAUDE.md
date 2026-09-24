@@ -15,14 +15,15 @@ itself in as a west dependency.
   keymap structure, `&kp`/modifiers, layers, hold-tap (home-row mods),
   bluetooth, reset, combos, `.conf`/Kconfig.
 - **[docs/corne-v3-this-repo.md](docs/corne-v3-this-repo.md)** — this board's
-  layout, key-position map, the four layers, the custom `hrm` behaviors, and the
+  layout, key-position map, the six layers, the custom `hrm` behaviors, and the
   build/flash workflow.
 
 ## Key files
 
 - `config/corne.keymap` — the keymap: `behaviors` node (custom `hrm`,
-  `hrm_pinky` home-row mods) + four layers (`default`, `lower`, `raise`,
-  `layer_3`). Devicetree syntax.
+  `hrm_pinky` home-row mods) + six layers (`default`, `lower`, `raise`,
+  `gaming`, `game_numpad`, `fn`). Devicetree syntax. `fn_layer` must stay the
+  highest index (see the repo doc for why).
 - `config/corne.conf` — Kconfig feature toggles (currently just `CONFIG_BT=y`).
   Shared across both halves.
 - `config/west.yml` — west manifest; pins ZMK to revision **v0.3** (Zephyr
@@ -47,7 +48,7 @@ needed.
   `firmware-builds/`. **Activate the venv first** (`source .venv/bin/activate`)
   in the same shell, or `build.sh` fails with `'west' is not on PATH`.
 - **Flash firmware:** `./flash.sh left` and `./flash.sh right`. Put each half in
-  bootloader mode first (double-tap reset, or the `&bootloader` key on layer 3);
+  bootloader mode first (double-tap reset, or the `&bootloader` key on the fn layer);
   it mounts as a `NICENANO` drive and the script copies the matching `.uf2`.
   Flash **both** halves after a keymap change.
 - **Halves won't talk over BLE (e.g. after swapping a controller):** build
@@ -56,8 +57,8 @@ needed.
 
 ## Conventions
 
-- Layers are referenced by **index** (0-3), not name; `&mo N` order matters and
-  matches file order in the keymap.
+- Layers are referenced by **index** (0-5), not name; `&mo N` / `&tog N` order
+  matters and matches file order in the keymap.
 - Key positions for `hold-trigger-key-positions` / future combos are 0-indexed
   left-to-right, top-to-bottom — see the position map in the repo-specific doc.
 - The `firmware-builds/` `.uf2` files are produced by `build.sh`. The local west

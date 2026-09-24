@@ -43,17 +43,27 @@ LSFT  Z   X   C   V   B        N   M   ,   .   /   ESC
 
 Defined in `config/corne.keymap`, indexed in file order:
 
-| # | Node            | Reached by        | Purpose |
-| - | --------------- | ----------------- | ------- |
-| 0 | `default_layer` | (base)            | Alphas + home-row mods. |
-| 1 | `lower_layer`   | hold right thumb — `&mo 1` (pos 40) | Symbols (left), nav + media (right). |
-| 2 | `raise_layer`   | hold left thumb — `&mo 2` (pos 37)  | Numbers + math/bracket symbols. |
-| 3 | `layer_3`       | `&mo 3` (pos 37 & 40, present **only** on the raise layer) | F-keys, `&bootloader`, `&sys_reset`, `&bt BT_CLR`. |
+| # | Node                | Reached by | Purpose |
+| - | ------------------- | ---------- | ------- |
+| 0 | `default_layer`     | (base) | Alphas + right-hand home-row mods. |
+| 1 | `lower_layer`       | hold right thumb, `&mo 1` (pos 40) | Symbols (left), nav + media (right). |
+| 2 | `raise_layer`       | hold left thumb, `&mo 2` (pos 37) | Numbers + math/bracket symbols. |
+| 3 | `gaming_layer`      | `&tog 3` on the fn layer (pos 6, the `Y` key) | Plain keys, Space on left inner thumb, `&mo 4` on left middle thumb. |
+| 4 | `game_numpad_layer` | hold left middle thumb from Game, `&mo 4` (pos 37) | One-handed numpad; `&mo 5` on the shift position (pos 24). |
+| 5 | `fn_layer`          | `&mo 5` (pos 37 on lower/raise, pos 40 on raise, pos 24 on game numpad) | F-keys, `&bootloader`, `&sys_reset`, `&bt BT_CLR`, `&tog 3`. |
 
-Reaching layer 3: only the **raise** layer (2) maps its thumbs to `&mo 3` — the
-lower layer leaves them `&trans`. So the access path is hold the **left** thumb
-(`&mo 2` -> raise), then the **right** thumb (now `&mo 3` -> layer 3). On the
-raise layer either thumb is `&mo 3`.
+Each layer carries a `display-name` (`Base`, `Lower`, `Raise`, `Game`,
+`GameNum`, `Fn`) which the left OLED shows as the active layer.
+
+Layer ordering matters: ZMK resolves a key from the **highest active index**
+downward, skipping `&trans`. The gaming layer is a toggle, so it stays active
+while the momentary layers are held on top of it. `fn_layer` must remain the
+highest index so that holding `&mo 5` from the game numpad shows F-keys rather
+than being masked by the numpad's numbers. Insert any future layer **before**
+`fn_layer` and renumber the `&mo 5` / `&tog 3` references accordingly.
+
+Reaching the fn layer from Base: hold either the lower or raise thumb, then the
+left middle thumb (`&mo 5`). On the raise layer the right thumb is `&mo 5` too.
 
 ## Home-row mods (custom `hrm` / `hrm_pinky` behaviors)
 
@@ -200,7 +210,7 @@ building.
 ```
 
 Put a half into bootloader mode (double-tap its reset button, or the
-`&bootloader` key on layer 3). It mounts as a `NICENANO` USB drive; the script
+`&bootloader` key on the fn layer). It mounts as a `NICENANO` USB drive; the script
 finds/mounts it and copies
 `firmware-builds/corne_<side>-nice_nano_v2-zmk.uf2` onto it. The board
 auto-reboots. Flash **both** halves after a keymap change.
